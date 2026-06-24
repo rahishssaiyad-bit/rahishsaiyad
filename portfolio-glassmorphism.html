@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saiyad Rahish — Vibe Coder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Clash+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --glass: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.15);
+  --glass-hover: rgba(255,255,255,0.12);
+  --blur: blur(20px);
+  --text: #f0f4ff;
+  --muted: rgba(255,255,255,0.45);
+  --c1: #a855f7;
+  --c2: #3b82f6;
+  --c3: #ec4899;
+  --c4: #06b6d4;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #050510;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+
+/* 3D CANVAS */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ANIMATED GRADIENT BG */
+.bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: float linear infinite;
+}
+
+.orb-1 { width: 600px; height: 600px; background: #7c3aed; top: -200px; left: -100px; animation-duration: 20s; }
+.orb-2 { width: 500px; height: 500px; background: #2563eb; top: 30%; right: -150px; animation-duration: 25s; animation-delay: -8s; }
+.orb-3 { width: 400px; height: 400px; background: #db2777; bottom: -100px; left: 30%; animation-duration: 18s; animation-delay: -4s; }
+.orb-4 { width: 300px; height: 300px; background: #0891b2; top: 60%; left: 10%; animation-duration: 22s; animation-delay: -12s; }
+
+@keyframes float {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(60px, -80px) scale(1.05); }
+  50%  { transform: translate(-40px, 60px) scale(0.95); }
+  75%  { transform: translate(80px, 40px) scale(1.08); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+
+
+/* EVERYTHING ABOVE BG */
+nav, section, footer { position: relative; z-index: 1; }
+
+/* GLASS MIXIN */
+.glass {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: calc(100% - 3rem);
+  max-width: 900px;
+  background: rgba(10,10,30,0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border);
+  border-radius: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1.5rem;
+}
+
+.nav-logo {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.3px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+}
+
+.nav-links a {
+  display: block;
+  padding: 0.45rem 1.1rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.25s;
+}
+
+.nav-links a:hover {
+  background: var(--glass);
+  color: var(--text);
+}
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8rem 2rem 4rem;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  background: rgba(168,85,247,0.15);
+  border: 1px solid rgba(168,85,247,0.4);
+  color: #c084fc;
+  animation: fadeDown 0.7s ease 0.2s both;
+}
+
+.hero-pill::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #a855f7;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(168,85,247,0.6); }
+  50% { box-shadow: 0 0 0 6px rgba(168,85,247,0); }
+}
+
+.hero-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: clamp(3.5rem, 11vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -3px;
+  margin-bottom: 1.5rem;
+  animation: fadeDown 0.7s ease 0.4s both;
+}
+
+.hero-name .word-1 { color: var(--text); display: block; }
+.hero-name .word-2 {
+  display: block;
+  background: linear-gradient(135deg, var(--c1) 0%, var(--c3) 40%, var(--c4) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200%;
+  animation: gradMove 5s ease infinite, fadeDown 0.7s ease 0.4s both;
+}
+
+@keyframes gradMove {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-tagline {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+  animation: fadeDown 0.7s ease 0.6s both;
+}
+
+.hero-tagline strong { color: var(--c4); font-weight: 600; }
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeDown 0.7s ease 0.8s both;
+}
+
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary-glass {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  color: white;
+  box-shadow: 0 0 30px rgba(124,58,237,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-primary-glass:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 50px rgba(124,58,237,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-ghost-glass {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+}
+
+.btn-ghost-glass:hover {
+  background: var(--glass-hover);
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* SCROLL ARROW */
+.scroll-hint {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  animation: fadeDown 1s ease 1.2s both;
+}
+
+.scroll-arrow {
+  width: 36px; height: 36px;
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  animation: bounce 2.5s ease-in-out infinite;
+  font-size: 0.9rem;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* SECTIONS */
+.section-wrap {
+  padding: 6rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--c1);
+  margin-bottom: 1rem;
+}
+
+.section-eyebrow::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--c1);
+}
+
+.section-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 2.5rem;
+}
+
+/* ABOUT */
+.about-bio-card {
+  padding: 2rem;
+  border-radius: 24px;
+  margin-bottom: 2.5rem;
+  background: rgba(168,85,247,0.08);
+  border: 1px solid rgba(168,85,247,0.2);
+  backdrop-filter: var(--blur);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.8);
+  max-width: 650px;
+}
+
+.about-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.about-card {
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+
+.about-card:hover {
+  transform: translateY(-6px);
+  background: var(--glass-hover);
+  border-color: rgba(168,85,247,0.4);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(168,85,247,0.1);
+}
+
+.about-card .icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
+.about-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+.about-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+/* SKILLS */
+.skills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.skill-chip {
+  padding: 0.45rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  color: var(--muted);
+  transition: all 0.25s;
+  cursor: default;
+}
+
+.skill-chip:hover {
+  background: rgba(168,85,247,0.15);
+  border-color: rgba(168,85,247,0.5);
+  color: #c084fc;
+  transform: translateY(-2px);
+}
+
+/* PROJECTS */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.2rem;
+}
+
+.project-card {
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+  transition: all 0.35s ease;
+  position: relative;
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(59,130,246,0.1));
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(168,85,247,0.4);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(168,85,247,0.15);
+}
+
+.project-card:hover::after { opacity: 1; }
+
+.project-img {
+  width: 100%;
+  height: 185px;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.project-img-placeholder {
+  width: 100%;
+  height: 185px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(59,130,246,0.2));
+}
+
+.project-body {
+  padding: 1.3rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.project-type {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--c4);
+  margin-bottom: 0.4rem;
+}
+
+.project-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 0.5rem;
+}
+
+.project-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--c1);
+  transition: gap 0.2s;
+}
+
+.project-card:hover .project-link { gap: 0.7rem; }
+
+/* CONTACT */
+#contact { padding-bottom: 2rem; }
+
+.contact-glass-card {
+  padding: 3rem;
+  border-radius: 32px;
+  background: var(--glass);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--glass-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+
+.contact-glass-card::after {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: rgba(168,85,247,0.1);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.contact-top {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.contact-top p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto 0.5rem;
+}
+
+.contact-avail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #34d399;
+  background: rgba(52,211,153,0.1);
+  border: 1px solid rgba(52,211,153,0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 50px;
+  margin-top: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.contact-avail::before {
+  content: '●';
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.contact-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.3s;
+}
+
+.contact-item:hover {
+  background: rgba(168,85,247,0.12);
+  border-color: rgba(168,85,247,0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(168,85,247,0.15);
+}
+
+.contact-item-icon { font-size: 1.4rem; }
+
+.contact-item-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.contact-item-val { font-size: 0.82rem; font-weight: 600; word-break: break-all; }
+
+.contact-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-text {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.footer-text span {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.footer-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 50px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.footer-counter strong {
+  color: var(--c1);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* ANIMATIONS */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media (max-width: 650px) {
+  nav { width: calc(100% - 2rem); padding: 0.6rem 1rem; top: 0.8rem; }
+  .nav-links a { padding: 0.4rem 0.7rem; font-size: 0.72rem; }
+  .contact-items { grid-template-columns: 1fr; }
+  .about-cards { grid-template-columns: 1fr 1fr; }
+  .contact-glass-card { padding: 1.8rem 1.2rem; }
+  footer { justify-content: center; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- BG ORBS -->
+<div class="bg-wrap">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+<!-- 3D CANVAS -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Saiyad Rahish</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-pill">✦ Available for freelance work</div>
+  <h1 class="hero-name">
+    <span class="word-1">Saiyad</span>
+    <span class="word-2">Rahish</span>
+  </h1>
+  <p class="hero-tagline">
+    Web Developer &nbsp;·&nbsp; <strong>Vibe Coder</strong> &nbsp;·&nbsp; JSK Operator
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn-glass btn-primary-glass">View Projects ↓</a>
+    <a href="#contact" class="btn-glass btn-ghost-glass">Get in Touch</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow">↓</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-eyebrow reveal">About Me</div>
+    <h2 class="section-title reveal">Self-taught.<br>Phone-only.<br>No limits.</h2>
+    <div class="about-bio-card reveal">
+      I build full-stack web apps entirely from my phone — no PC, no excuses.
+      Based in Gujarat, India, I run a Jan Seva Kendra (JSK) and code everything
+      from portals to 3D sites using HTML, JS, and Supabase.<br><br>
+      As a self-taught web developer, my journey began purely on a smartphone, overcoming the limitations of mobile-only development to build robust and functional web applications. This unique path has ingrained in me a deep problem-solving ethic and an unwavering commitment to efficiency and accessibility. I thrive on bringing ideas to life with clean code and a creative touch, always pushing the boundaries of what's possible, regardless of the tools at hand.
+    </div>
+    <div class="about-cards reveal">
+      <div class="about-card">
+        <span class="icon">📱</span>
+        <h3>Phone-Only Dev</h3>
+        <p>Every project built on a Realme C65 5G. No desktop, no IDE — pure mobile hustle.</p>
+      </div>
+      <div class="about-card">
+        <span class="icon">🏛️</span>
+        <h3>JSK Operator</h3>
+        <p>Running a Jan Seva Kendra in Gujarat — built my own portal to manage it from scratch.</p>
+      </div>
+      <div class="about-card">
+        <span class="icon">🚀</span>
+        <h3>Full Stack</h3>
+        <p>Frontend to backend — Supabase, Netlify, Three.js, vanilla JS. Ship fast, ship clean.</p>
+      </div>
+      <div class="about-card">
+        <span class="icon">🎨</span>
+        <h3>Vibe Coder</h3>
+        <p>Design + Dev = one person. Every pixel intentional, every interaction smooth.</p>
+      </div>
+    </div>
+    <div class="skills-wrap reveal">
+      <div class="skill-chip">HTML</div>
+      <div class="skill-chip">CSS</div>
+      <div class="skill-chip">JavaScript</div>
+      <div class="skill-chip">Supabase</div>
+      <div class="skill-chip">Three.js</div>
+      <div class="skill-chip">Netlify</div>
+      <div class="skill-chip">PostgreSQL</div>
+      <div class="skill-chip">REST API</div>
+      <div class="skill-chip">Replit</div>
+      <div class="skill-chip">Web Speech API</div>
+      <div class="skill-chip">GitHub</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-eyebrow reveal">Work</div>
+    <h2 class="section-title reveal">Things I've Built</h2>
+    <div class="projects-grid reveal">
+
+      <a href="https://raeeshmusicv5.netlify.app/" target="_blank" class="project-card">
+        <img class="project-img"
+          src="https://api.screenshotone.com/take?url=https://raeeshmusicv5.netlify.app/&viewport_width=1280&viewport_height=720&format=jpg&image_quality=80&access_key=free"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="RaeeshMusic">
+        <div class="project-img-placeholder">🎵</div>
+        <div class="project-body">
+          <p class="project-type">Music Streaming</p>
+          <h3 class="project-title">RaeeshMusic v5</h3>
+          <p class="project-desc">YouTube-powered music streaming site with custom player UI and curated playlists.</p>
+          <span class="project-link">Visit Project →</span>
+        </div>
+      </a>
+
+      <a href="https://jansevakendraa.netlify.app/" target="_blank" class="project-card">
+        <img class="project-img"
+          src="https://api.screenshotone.com/take?url=https://jansevakendraa.netlify.app/&viewport_width=1280&viewport_height=720&format=jpg&image_quality=80&access_key=free"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="JSK Portal">
+        <div class="project-img-placeholder">🏛️</div>
+        <div class="project-body">
+          <p class="project-type">SaaS Portal</p>
+          <h3 class="project-title">Jan Seva Kendra Portal</h3>
+          <p class="project-desc">Multi-tenant government services portal with Supabase backend, operator management & superadmin panel.</p>
+          <span class="project-link">Visit Project →</span>
+        </div>
+      </a>
+
+      <a href="https://rahishssaiyad-bit.github.io/secretchats" target="_blank" class="project-card">
+        <img class="project-img"
+          src="https://api.screenshotone.com/take?url=https://rahishssaiyad-bit.github.io/secretchats&viewport_width=1280&viewport_height=720&format=jpg&image_quality=80&access_key=free"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="Secret Chats">
+        <div class="project-img-placeholder">💬</div>
+        <div class="project-body">
+          <p class="project-type">Chat App</p>
+          <h3 class="project-title">Secret Chats</h3>
+          <p class="project-desc">Anonymous real-time chat application with a clean, minimal interface.</p>
+          <span class="project-link">Visit Project →</span>
+        </div>
+      </a>
+
+      <a href="https://rahishssaiyad-bit.github.io/GamePad/" target="_blank" class="project-card">
+        <img class="project-img"
+          src="https://api.screenshotone.com/take?url=https://rahishssaiyad-bit.github.io/GamePad/&viewport_width=1280&viewport_height=720&format=jpg&image_quality=80&access_key=free"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="GamePad">
+        <div class="project-img-placeholder">🎮</div>
+        <div class="project-body">
+          <p class="project-type">Gaming</p>
+          <h3 class="project-title">GamePad</h3>
+          <p class="project-desc">Browser-based game hub with multiple mini-games and a slick controller-inspired UI.</p>
+          <span class="project-link">Visit Project →</span>
+        </div>
+      </a>
+
+      <a href="https://b931e7a3-450d-49a5-88cb-ce1e54c645ff-00-10upkh0avru7j.sisko.replit.dev/" target="_blank" class="project-card">
+        <img class="project-img"
+          src="https://api.screenshotone.com/take?url=https://b931e7a3-450d-49a5-88cb-ce1e54c645ff-00-10upkh0avru7j.sisko.replit.dev/&viewport_width=1280&viewport_height=720&format=jpg&image_quality=80&access_key=free"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="Playwright Agent">
+        <div class="project-img-placeholder">🤖</div>
+        <div class="project-body">
+          <p class="project-type">Automation</p>
+          <h3 class="project-title">Playwright Agent</h3>
+          <p class="project-desc">Auto-form-filling automation agent built on Replit — powers JSK client data entry into government portals.</p>
+          <span class="project-link">Visit Project →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="section-eyebrow reveal">Contact</div>
+    <h2 class="section-title reveal">Let's build<br>something.</h2>
+    <div class="contact-glass-card reveal">
+      <div class="contact-top">
+        <p>Got a project idea? Need a portal, website, or automation tool? I'm open to freelance work — reach out anytime.</p>
+        <div class="contact-avail">Available for custom web portals, automation tools & government form agents.</div>
+      </div>
+      <div class="contact-items">
+        <a href="mailto:rahishsaiyad315@gmail.com" class="contact-item">
+          <span class="contact-item-icon">✉️</span>
+          <div>
+            <div class="contact-item-label">Email</div>
+            <div class="contact-item-val">rahishsaiyad315@gmail.com</div>
+          </div>
+        </a>
+        <a href="tel:+919737090523" class="contact-item">
+          <span class="contact-item-icon">📞</span>
+          <div>
+            <div class="contact-item-label">Phone</div>
+            <div class="contact-item-val">+91 97370 90523</div>
+          </div>
+        </a>
+      </div>
+      <div class="contact-btns">
+        <a href="mailto:rahishsaiyad315@gmail.com" class="btn-glass btn-primary-glass">Email Me ✉️</a>
+        <a href="tel:+919737090523" class="btn-glass btn-ghost-glass">Call Me 📞</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-text">Built with 💜 by <span>Saiyad Rahish</span> — from a phone, Gujarat, India</p>
+  <div class="footer-counter">
+    👁️ Visitors: <strong id="visit-count">...</strong>
+  </div>
+</footer>
+
+<script>
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+
+// VISITOR COUNTER
+async function loadCount() {
+  try {
+    const res = await fetch('https://api.counterapi.dev/v1/saiyad-rahish-portfolio/visits/up');
+    const data = await res.json();
+    document.getElementById('visit-count').textContent = data.count.toLocaleString('en-IN');
+  } catch(e) {
+    document.getElementById('visit-count').textContent = '—';
+  }
+}
+loadCount();
+</script>
+
+
+<!-- THREE.JS BACKGROUND -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const canvas = document.getElementById('bg-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
+
+const particleCount = 1800;
+const positions = new Float32Array(particleCount * 3);
+const colors = new Float32Array(particleCount * 3);
+
+const palette = [
+  new THREE.Color('#a855f7'),
+  new THREE.Color('#3b82f6'),
+  new THREE.Color('#ec4899'),
+  new THREE.Color('#06b6d4'),
+  new THREE.Color('#8b5cf6'),
+];
+
+for (let i = 0; i < particleCount; i++) {
+  positions[i * 3]     = (Math.random() - 0.5) * 20;
+  positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+  positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+  const c = palette[Math.floor(Math.random() * palette.length)];
+  colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
+}
+
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+const mat = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.65, sizeAttenuation: true });
+const particles = new THREE.Points(geo, mat);
+scene.add(particles);
+
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', e => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
+});
+document.addEventListener('touchmove', e => {
+  mouseX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
+  mouseY = -(e.touches[0].clientY / window.innerHeight - 0.5) * 2;
+}, { passive: true });
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  particles.rotation.y = t * 0.04 + mouseX * 0.1;
+  particles.rotation.x = t * 0.02 + mouseY * 0.05;
+  camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.05;
+  camera.position.y += (mouseY * 0.3 - camera.position.y) * 0.05;
+  camera.lookAt(scene.position);
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
